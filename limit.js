@@ -19,12 +19,25 @@ if(endTimeText == undefined){
     document.cookie = KEY_END_TIME + "=" + endTimeText + "; expires=" + cookieLife.toUTCString();
 }
 
-//日付はダミー
-let startTime = new Date("2000-01-01T" + startTimeText + "+09:00");
-let endTime = new Date("2000-01-01T" + endTimeText + "+09:00");
-let startTimeMilliSeconds = getTimeMilliSeconds(startTime);
-let endTimeMilliSeconds = getTimeMilliSeconds(endTime);
-let betweenTime = endTimeMilliSeconds - startTimeMilliSeconds;
+let startTime = new Date();
+let endTime = new Date();
+let startTimeMilliSeconds = 0;
+let endTimeMilliSeconds = 0;
+let betweenTime = 0;
+
+init();
+
+function init(){
+    //日付はダミー
+    startTime = new Date("2000-01-01T" + startTimeText + "+09:00");
+    endTime = new Date("2000-01-01T" + endTimeText + "+09:00");
+    startTimeMilliSeconds = getTimeMilliSeconds(startTime);
+    endTimeMilliSeconds = getTimeMilliSeconds(endTime);
+    if(startTime > endTime){
+        endTimeMilliSeconds += 24 * 3600000; //開始時間と終了時間が逆転していたら終了時間を一日進める
+    }
+    betweenTime = endTimeMilliSeconds - startTimeMilliSeconds;
+}
 
 function limit(){
     const startTimeFrom = document.getElementById("start-time");
@@ -33,23 +46,14 @@ function limit(){
     endTimeFrom.value = endTimeText;
     document.getElementById("start-time-info").innerHTML = startTimeText;
     document.getElementById("end-time-info").innerHTML = endTimeText;
-
+    
     const setTimeBtn = document.getElementById("set-time");
     setTimeBtn.addEventListener("click", () => {
         startTimeText = startTimeFrom.value;
         endTimeText = endTimeFrom.value;
-        startTime = new Date("2000-01-01T" + startTimeText + "+09:00");
-        endTime = new Date("2000-01-01T" + endTimeText + "+09:00");
-        startTimeMilliSeconds = getTimeMilliSeconds(startTime);
-        endTimeMilliSeconds = getTimeMilliSeconds(endTime);
-        if(startTime > endTime){
-            endTimeMilliSeconds += 24 * 3600000; //開始時間と終了時間が逆転していたら終了時間を一日進める
-        }
-        betweenTime = endTimeMilliSeconds - startTimeMilliSeconds;
-        const startTimeInfo = document.getElementById("start-time-info");
-        const endTimeInfo = document.getElementById("end-time-info");
-        startTimeInfo.innerHTML = startTimeText;
-        endTimeInfo.innerHTML = endTimeText;
+        init();
+        document.getElementById("start-time-info").innerHTML = startTimeText;
+        document.getElementById("end-time-info").innerHTML = endTimeText;
         document.cookie = KEY_START_TIME + "=" + startTimeText + "; expires=" + cookieLife.toUTCString();
         document.cookie = KEY_END_TIME + "=" + endTimeText + "; expires=" + cookieLife.toUTCString();
     });
