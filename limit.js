@@ -31,6 +31,8 @@ function limit(){
     const endTimeFrom = document.getElementById("end-time");
     startTimeFrom.value = startTimeText;
     endTimeFrom.value = endTimeText;
+    document.getElementById("start-time-info").innerHTML = startTimeText;
+    document.getElementById("end-time-info").innerHTML = endTimeText;
 
     const setTimeBtn = document.getElementById("set-time");
     setTimeBtn.addEventListener("click", () => {
